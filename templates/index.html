@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard | Instagram CMS{% endblock %}
+
+{% block content %}
+<!-- hero section -->
+<div class="hero-section">
+    <div class="container text-center">
+        <h1>Instagram CMS</h1>
+        <p class="lead mt-3">Manage your posts, hashtags, analytics &amp; comments in one place</p>
+        <div class="mt-4">
+            <a href="/add-post" class="btn btn-light btn-lg me-2">➕ Create New Post</a>
+            <a href="/posts" class="btn btn-outline-light btn-lg">📋 Browse Posts</a>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+
+    <!-- stat cards -->
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-5 g-3 mb-5">
+        <div class="col">
+            <div class="card stat-card text-center p-3 h-100">
+                <div class="card-body">
+                    <h2 class="fw-bold text-primary">{{ total }}</h2>
+                    <p class="mb-0 text-muted">Total Posts</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card stat-card text-center p-3 h-100">
+                <div class="card-body">
+                    <h2 class="fw-bold text-warning">{{ scheduled }}</h2>
+                    <p class="mb-0 text-muted">Scheduled</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card stat-card text-center p-3 h-100">
+                <div class="card-body">
+                    <h2 class="fw-bold text-success">{{ published }}</h2>
+                    <p class="mb-0 text-muted">Published</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card stat-card text-center p-3 h-100">
+                <div class="card-body">
+                    <h2 class="fw-bold text-secondary">{{ drafts }}</h2>
+                    <p class="mb-0 text-muted">Drafts</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card stat-card text-center p-3 h-100">
+                <div class="card-body">
+                    <h2 class="fw-bold text-danger">{{ followers }}</h2>
+                    <p class="mb-0 text-muted">Latest Followers</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- feature cards -->
+    <h4 class="mb-4">What you can do</h4>
+    <div class="row row-cols-1 row-cols-md-2 g-4 mb-5">
+        <div class="col">
+            <div class="card item-card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">📅 Schedule Posts</h5>
+                    <p class="card-text text-muted">Add posts with captions, image URLs, and schedule them for future dates. Track draft, scheduled, and published status.</p>
+                    <a href="/add-post" class="btn btn-sm btn-primary">Add a Post</a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card item-card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">📊 Track Analytics</h5>
+                    <p class="card-text text-muted">Log follower snapshots, see average likes and reach over time. Monitor your Instagram growth.</p>
+                    <a href="/analytics" class="btn btn-sm btn-primary">View Analytics</a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card item-card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">#️⃣ Hashtag Manager</h5>
+                    <p class="card-text text-muted">Add hashtags per post and track your top 5 most-used tags on the analytics page.</p>
+                    <a href="/posts" class="btn btn-sm btn-primary">View Posts</a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card item-card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">💬 Manage Comments &amp; DMs</h5>
+                    <p class="card-text text-muted">Submit, view, and delete comments and DMs on each post. Keep your engagement organized.</p>
+                    <a href="/posts" class="btn btn-sm btn-primary">Browse Posts</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
