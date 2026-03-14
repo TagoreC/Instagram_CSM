@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}Analytics | Instagram CMS{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>📊 Analytics</h2>
+        <a href="/add-analytics" class="btn btn-primary">➕ Log New Snapshot</a>
+    </div>
+
+    {% if latest %}
+        <!-- latest snapshot card -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h5 class="card-title text-muted">Latest Snapshot</h5>
+                <div class="row text-center">
+                    <div class="col">
+                        <h3 class="fw-bold text-primary">{{ latest['followers'] }}</h3>
+                        <p class="text-muted small">Followers</p>
+                    </div>
+                    <div class="col">
+                        <h3 class="fw-bold text-secondary">{{ latest['following'] }}</h3>
+                        <p class="text-muted small">Following</p>
+                    </div>
+                    <div class="col">
+                        <h3 class="fw-bold text-success">{{ latest['total_posts'] }}</h3>
+                        <p class="text-muted small">Total Posts</p>
+                    </div>
+                    <div class="col">
+                        <h3 class="fw-bold text-warning">{{ latest['avg_likes'] }}</h3>
+                        <p class="text-muted small">Avg Likes</p>
+                    </div>
+                    <div class="col">
+                        <h3 class="fw-bold text-danger">{{ latest['avg_reach'] }}</h3>
+                        <p class="text-muted small">Avg Reach</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-info">No analytics data yet. <a href="/add-analytics">Log your first snapshot</a>.</div>
+    {% endif %}
+
+    <!-- top 5 hashtags -->
+    {% if top_tags %}
+        <h5 class="mb-3">🔝 Top 5 Hashtags</h5>
+        <div class="mb-4">
+            {% for row in top_tags %}
+                <span class="hashtag-badge me-1">{{ row['tag'] }} <span class="badge bg-primary ms-1">{{ row['cnt'] }}</span></span>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- all snapshots table -->
+    {% if data %}
+        <h5 class="mb-3">All Snapshots</h5>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Recorded At</th>
+                        <th>Followers</th>
+                        <th>Following</th>
+                        <th>Total Posts</th>
+                        <th>Avg Likes</th>
+                        <th>Avg Reach</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in data %}
+                        <tr>
+                            <td>{{ row['recorded_at'] }}</td>
+                            <td>{{ row['followers'] }}</td>
+                            <td>{{ row['following'] }}</td>
+                            <td>{{ row['total_posts'] }}</td>
+                            <td>{{ row['avg_likes'] }}</td>
+                            <td>{{ row['avg_reach'] }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}
