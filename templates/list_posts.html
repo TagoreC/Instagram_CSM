@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %}All Posts | Instagram CMS{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>📋 All Posts</h2>
+        <a href="/add-post" class="btn btn-primary">➕ Add Post</a>
+    </div>
+
+    <!-- filter bar -->
+    <form method="GET" action="/posts" class="row g-2 mb-4 align-items-end">
+        <div class="col-md-3">
+            <label class="form-label">Filter by Status</label>
+            <select class="form-select" name="status" id="statusFilter">
+                <option value="">All</option>
+                <option value="draft" {% if status_filter == 'draft' %}selected{% endif %}>Draft</option>
+                <option value="scheduled" {% if status_filter == 'scheduled' %}selected{% endif %}>Scheduled</option>
+                <option value="published" {% if status_filter == 'published' %}selected{% endif %}>Published</option>
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Search by Caption</label>
+            <input type="text" class="form-control" name="q" value="{{ search_query }}" placeholder="Search captions...">
+        </div>
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-outline-primary w-100">🔍 Search</button>
+        </div>
+    </form>
+
+    <!-- post cards -->
+    {% if posts %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for post in posts %}
+            <div class="col">
+                <div class="card item-card h-100 shadow-sm">
+                    {% if post['image_url'] %}
+                        <img src="{{ post['image_url'] }}" class="post-image" alt="Post image" onerror="this.src='https://placehold.co/400x200?text=No+Image'">
+                    {% else %}
+                        <img src="https://placehold.co/400x200?text=No+Image" class="post-image" alt="placeholder">
+                    {% endif %}
+
+                    <div class="card-body">
+                        <p class="mb-1"><span class="text-muted small">📸</span> <strong>{{ post['username'] }}</strong></p>
+                        <p class="card-text text-muted small">{{ post['caption'][:80] }}{% if post['caption']|length > 80 %}...{% endif %}</p>
+
+                        <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                            {% if post['status'] == 'draft' %}
+                                <span class="badge bg-warning text-dark">Draft</span>
+                            {% elif post['status'] == 'scheduled' %}
+                                <span class="badge bg-primary">Scheduled</span>
+                            {% else %}
+                                <span class="badge bg-success">Published</span>
+                            {% endif %}
+
+                            {% if post['scheduled_at'] %}
+                                <span class="small text-muted">📅 {{ post['scheduled_at'] }}</span>
+                            {% endif %}
+                        </div>
+
+                        <p class="small text-muted mb-2">❤️ {{ post['likes'] }} likes</p>
+                    </div>
+
+                    <div class="card-footer bg-white border-0 pb-3">
+                        <a href="/post/{{ post['id'] }}" class="btn btn-sm btn-outline-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info mt-3">No posts found. <a href="/add-post">Add your first post</a>.</div>
+    {% endif %}
+
+</div>
+{% endblock %}
