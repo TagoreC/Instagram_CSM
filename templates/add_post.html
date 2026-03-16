@@ -1,67 +1,98 @@
 {% extends 'base.html' %}
-
-{% block title %}Add Post | Instagram CMS{% endblock %}
+{% block title %}Add Post | InstaCMS{% endblock %}
 
 {% block content %}
-<div class="container my-5">
+<div class="page-wrap">
     <div class="row justify-content-center">
-        <div class="col-md-8">
-            <h2 class="mb-4">📝 Add New Post</h2>
+        <div class="col-md-7">
+            <p class="page-title">New Post</p>
 
-            <!-- main form -->
-            <form id="addForm" method="POST" action="/add-post">
+            <form id="addForm" method="POST" action="/add-post" enctype="multipart/form-data">
 
                 <div class="mb-3">
-                    <label for="username" class="form-label">Instagram Username <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="username" name="username" placeholder="e.g. @travel_photos">
+                    <label for="username" class="form-label small">Username *</label>
+                    <input type="text" class="form-control form-control-sm" id="username" name="username" placeholder="@handle">
                     <span class="error-msg"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label for="caption" class="form-label">Caption <span class="text-danger">*</span></label>
-                    <textarea class="form-control" id="caption" name="caption" rows="4" maxlength="2200" placeholder="Write your caption here..."></textarea>
+                    <label for="caption" class="form-label small">Caption *</label>
+                    <textarea class="form-control form-control-sm" id="caption" name="caption" rows="4" maxlength="2200"></textarea>
                     <span class="error-msg"></span>
                 </div>
 
+                <!-- media: file OR url -->
                 <div class="mb-3">
-                    <label for="image_url" class="form-label">Image URL <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="image_url" name="image_url" placeholder="https://example.com/photo.jpg">
-                    <span class="error-msg"></span>
+                    <label class="form-label small">Media * <span class="text-muted">(upload a file or enter a URL)</span></label>
+                    <input type="file" class="form-control form-control-sm mb-2" id="media_file" name="media_file"
+                           accept="image/*,video/*" onchange="previewMedia(this)">
+                    <div class="text-muted small mb-2" style="font-size:0.78rem;">jpg · png · gif · mp4 · mov · webm</div>
+
+                    <div id="mediaPreviewBox" class="mb-2 d-none">
+                        <img id="imgPreview" class="media-preview d-none" alt="preview">
+                        <video id="vidPreview" class="media-preview d-none" controls muted></video>
+                    </div>
+
+                    <div class="or-divider my-2">— or —</div>
+
+                    <input type="text" class="form-control form-control-sm" id="image_url" name="image_url" placeholder="https://example.com/image.jpg">
+                    <span class="error-msg" id="mediaError"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label for="status" class="form-label">Status</label>
-                    <select class="form-select" id="status" name="status">
+                    <label for="status" class="form-label small">Status</label>
+                    <select class="form-select form-select-sm" id="status" name="status">
                         <option value="draft">Draft</option>
                         <option value="scheduled">Scheduled</option>
                         <option value="published">Published</option>
                     </select>
-                    <span class="error-msg"></span>
                 </div>
 
-                <div class="mb-3" id="scheduledDateGroup" style="display:none;">
-                    <label for="scheduled_at" class="form-label">Scheduled Date <span class="text-danger">*</span></label>
-                    <input type="date" class="form-control" id="scheduled_at" name="scheduled_at">
-                    <span class="error-msg"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label for="likes" class="form-label">Estimated Likes</label>
-                    <input type="number" class="form-control" id="likes" name="likes" min="0" placeholder="0">
+                <div class="mb-3 d-none" id="scheduledDateGroup">
+                    <label for="scheduled_at" class="form-label small">Scheduled Date *</label>
+                    <input type="date" class="form-control form-control-sm" id="scheduled_at" name="scheduled_at">
                     <span class="error-msg"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label for="hashtags" class="form-label">Hashtags <small class="text-muted">(comma-separated)</small></label>
-                    <input type="text" class="form-control" id="hashtags" name="hashtags" placeholder="#travel, #photography, #nature">
-                    <span class="error-msg"></span>
+                    <label for="likes" class="form-label small">Estimated Likes</label>
+                    <input type="number" class="form-control form-control-sm" id="likes" name="likes" min="0" placeholder="0">
                 </div>
 
-                <button type="submit" class="btn btn-primary px-4">💾 Save Post</button>
-                <a href="/posts" class="btn btn-outline-secondary ms-2">Cancel</a>
+                <div class="mb-4">
+                    <label for="hashtags" class="form-label small">Hashtags <span class="text-muted">(comma-separated)</span></label>
+                    <input type="text" class="form-control form-control-sm" id="hashtags" name="hashtags" placeholder="#travel, #food">
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-sm">Save Post</button>
+                <a href="/posts" class="btn btn-link btn-sm text-muted">Cancel</a>
 
             </form>
         </div>
     </div>
 </div>
+
+<script>
+function previewMedia(input) {
+    var imgP = document.getElementById('imgPreview');
+    var vidP = document.getElementById('vidPreview');
+    var box = document.getElementById('mediaPreviewBox');
+    if (input.files && input.files[0]) {
+        var file = input.files[0];
+        var url = URL.createObjectURL(file);
+        if (file.type.startsWith('video/')) {
+            vidP.src = url;
+            vidP.classList.remove('d-none');
+            imgP.classList.add('d-none');
+        } else {
+            imgP.src = url;
+            imgP.classList.remove('d-none');
+            vidP.classList.add('d-none');
+        }
+        box.classList.remove('d-none');
+        // clear url field if file picked
+        document.getElementById('image_url').value = '';
+    }
+}
+</script>
 {% endblock %}

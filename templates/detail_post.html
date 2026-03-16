@@ -1,121 +1,103 @@
 {% extends 'base.html' %}
-
-{% block title %}Post Detail | Instagram CMS{% endblock %}
+{% block title %}Post | InstaCMS{% endblock %}
 
 {% block content %}
-<div class="container my-5">
+<div class="page-wrap">
 
-    <a href="/posts" class="btn btn-outline-secondary mb-4">← Back to Posts</a>
+    <a href="/posts" class="btn btn-outline-secondary btn-sm mb-4">← Back</a>
 
-    <div class="row">
+    <div class="row g-4">
 
-        <!-- left column: post details -->
+        <!-- left: post info -->
         <div class="col-md-7">
-            <div class="card shadow-sm mb-4">
+            <div class="card">
                 <div class="card-body">
 
-                    {% if post['image_url'] %}
-                        <img src="{{ post['image_url'] }}" class="detail-image" alt="Post image" onerror="this.src='https://placehold.co/600x400?text=No+Image'">
+                    {% if post['media_file'] %}
+                        {% if post['media_type'] == 'video' %}
+                            <video class="detail-image" controls>
+                                <source src="{{ url_for('static', filename='uploads/' + post['media_file']) }}">
+                            </video>
+                        {% else %}
+                            <img src="{{ url_for('static', filename='uploads/' + post['media_file']) }}" class="detail-image" alt="post">
+                        {% endif %}
+                    {% elif post['image_url'] %}
+                        <img src="{{ post['image_url'] }}" class="detail-image" alt="post" onerror="this.src='https://placehold.co/600x380?text=No+Image'">
                     {% endif %}
 
-                    <h5 class="card-title">📸 {{ post['username'] }}</h5>
-                    <p class="card-text">{{ post['caption'] }}</p>
-
-                    <div class="mb-2">
-                        {% if post['status'] == 'draft' %}
-                            <span class="badge bg-warning text-dark">Draft</span>
-                        {% elif post['status'] == 'scheduled' %}
-                            <span class="badge bg-primary">Scheduled</span>
-                        {% else %}
-                            <span class="badge bg-success">Published</span>
-                        {% endif %}
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <span class="fw-semibold">{{ post['username'] }}</span>
+                        {% if post['status'] == 'draft' %}<span class="badge-draft">Draft</span>
+                        {% elif post['status'] == 'scheduled' %}<span class="badge-sched">Scheduled</span>
+                        {% else %}<span class="badge-pub">Published</span>{% endif %}
                     </div>
 
-                    {% if post['scheduled_at'] %}
-                        <p class="text-muted small">📅 Scheduled: {{ post['scheduled_at'] }}</p>
-                    {% endif %}
+                    <p class="mb-2" style="line-height:1.6;">{{ post['caption'] }}</p>
 
-                    <p class="text-muted small">❤️ {{ post['likes'] }} likes &nbsp; | &nbsp; 🕐 Created: {{ post['created_at'] }}</p>
+                    <p class="text-muted small mb-1">{{ post['likes'] }} likes &nbsp;·&nbsp; {{ post['created_at'][:16] }}</p>
+                    {% if post['scheduled_at'] %}<p class="text-muted small mb-2">Scheduled: {{ post['scheduled_at'] }}</p>{% endif %}
 
-                    <!-- hashtag badges -->
+                    <!-- hashtags -->
                     {% if hashtags %}
-                        <div class="mt-3">
-                            <strong>Hashtags:</strong><br>
-                            {% for row in hashtags %}
-                                <span class="hashtag-badge">{{ row['tag'] }}</span>
-                            {% endfor %}
+                        <div class="mt-2">
+                            {% for row in hashtags %}<span class="hashtag-badge">{{ row['tag'] }}</span>{% endfor %}
                         </div>
-                    {% else %}
-                        <p class="text-muted small mt-2">No hashtags for this post.</p>
                     {% endif %}
 
-                    <!-- comments list -->
-                    <div class="mt-4">
-                        <h6>Comments &amp; DMs</h6>
-                        {% if comments %}
-                            {% for c in comments %}
-                                <div class="border rounded p-2 mb-2">
-                                    <strong>{{ c['commenter'] }}</strong>
-                                    <span class="badge {% if c['type'] == 'dm' %}bg-secondary{% else %}bg-info text-dark{% endif %} ms-1 small">{{ c['type'] }}</span>
-                                    <p class="mb-0 mt-1 small">{{ c['body'] }}</p>
-                                    <p class="text-muted small mb-0">{{ c['created_at'] }}</p>
-                                </div>
-                            {% endfor %}
-                        {% else %}
-                            <p class="text-muted small">No comments yet.</p>
-                        {% endif %}
-                    </div>
+                    <!-- comments -->
+                    <hr class="my-3">
+                    <p class="fw-semibold small mb-2">Comments &amp; DMs</p>
+                    {% if comments %}
+                        {% for c in comments %}
+                            <div class="border rounded p-2 mb-2 small">
+                                <span class="fw-semibold">{{ c['commenter'] }}</span>
+                                <span class="text-muted ms-1">[{{ c['type'] }}]</span>
+                                <p class="mb-0 mt-1">{{ c['body'] }}</p>
+                                <p class="text-muted mb-0" style="font-size:0.75rem;">{{ c['created_at'][:16] }}</p>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted small">No comments yet.</p>
+                    {% endif %}
 
                 </div>
             </div>
         </div>
 
-        <!-- right column: comment form + delete -->
+        <!-- right: comment form + delete -->
         <div class="col-md-5">
-
-            <div class="card shadow-sm mb-4">
+            <div class="card mb-3">
                 <div class="card-body">
-                    <h6 class="card-title">💬 Add a Comment / DM</h6>
-
+                    <p class="fw-semibold small mb-3">Add Comment / DM</p>
                     <form id="actionForm" method="POST" action="/submit-comment/{{ post['id'] }}">
-
-                        <div class="mb-3">
-                            <label for="commenter" class="form-label">Your Name</label>
-                            <input type="text" class="form-control" id="commenter" name="commenter" placeholder="Name">
+                        <div class="mb-2">
+                            <input type="text" class="form-control form-control-sm" id="commenter" name="commenter" placeholder="Your name">
                             <span class="error-msg"></span>
                         </div>
-
-                        <div class="mb-3">
-                            <label for="type" class="form-label">Type</label>
-                            <select class="form-select" id="type" name="type">
+                        <div class="mb-2">
+                            <select class="form-select form-select-sm" id="type" name="type">
                                 <option value="comment">Comment</option>
                                 <option value="dm">DM</option>
                             </select>
                         </div>
-
-                        <div class="mb-3">
-                            <label for="body" class="form-label">Message</label>
-                            <textarea class="form-control" id="body" name="body" rows="3" placeholder="Write here..."></textarea>
+                        <div class="mb-2">
+                            <textarea class="form-control form-control-sm" id="body" name="body" rows="3" placeholder="Write here..."></textarea>
                             <span class="error-msg"></span>
                         </div>
-
-                        <button type="submit" class="btn btn-primary w-100" id="submitBtn">Post</button>
-
+                        <button type="submit" class="btn btn-primary btn-sm w-100" id="submitBtn">Post</button>
                     </form>
                 </div>
             </div>
 
-            <!-- delete post -->
-            <div class="card border-danger shadow-sm">
+            <div class="card border-danger">
                 <div class="card-body">
-                    <h6 class="text-danger">⚠️ Delete Post</h6>
-                    <p class="small text-muted">This will permanently delete this post and all its comments and hashtags.</p>
-                    <form method="POST" action="/delete-post/{{ post['id'] }}" onsubmit="return confirm('Are you sure you want to delete this post?');">
-                        <button type="submit" class="btn btn-danger btn-sm">Delete Post</button>
+                    <p class="text-danger fw-semibold small mb-1">Delete Post</p>
+                    <p class="text-muted small mb-2">Removes post, hashtags and comments permanently.</p>
+                    <form method="POST" action="/delete-post/{{ post['id'] }}" onsubmit="return confirm('Delete this post?')">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
                     </form>
                 </div>
             </div>
-
         </div>
     </div>
 </div>

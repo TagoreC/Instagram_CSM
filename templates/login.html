@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block title %}Welcome — InstaCMS{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width:440px; margin:80px auto;">
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+            <div class="text-center mb-4">
+                <h4 class="fw-bold mb-1">InstaCMS</h4>
+                <p class="text-muted small">Manage your Instagram content</p>
+            </div>
+
+            <!-- tab switcher -->
+            <ul class="nav nav-pills nav-fill mb-4" id="authTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link {{ 'active' if active_tab != 'register' else '' }}"
+                            id="signin-tab" data-bs-toggle="pill" data-bs-target="#signinPane"
+                            type="button" role="tab">
+                        Sign In
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link {{ 'active' if active_tab == 'register' else '' }}"
+                            id="register-tab" data-bs-toggle="pill" data-bs-target="#registerPane"
+                            type="button" role="tab">
+                        New User
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+
+                <!-- Sign In pane -->
+                <div class="tab-pane fade {{ 'show active' if active_tab != 'register' else '' }}" id="signinPane" role="tabpanel">
+                    <form method="POST" action="/login">
+                        <div class="mb-3">
+                            <label for="login_username" class="form-label fw-semibold">Username</label>
+                            <input type="text" id="login_username" name="username"
+                                   class="form-control" placeholder="Enter your username"
+                                   autocomplete="username" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="login_password" class="form-label fw-semibold">Password</label>
+                            <input type="password" id="login_password" name="password"
+                                   class="form-control" placeholder="Enter your password"
+                                   autocomplete="current-password" required>
+                        </div>
+                        <button type="submit" class="btn btn-dark w-100">Sign In</button>
+                    </form>
+                </div>
+
+                <!-- New User (Register) pane -->
+                <div class="tab-pane fade {{ 'show active' if active_tab == 'register' else '' }}" id="registerPane" role="tabpanel">
+                    <form method="POST" action="/register">
+                        <div class="mb-3">
+                            <label for="reg_username" class="form-label fw-semibold">Choose a Username</label>
+                            <input type="text" id="reg_username" name="username"
+                                   class="form-control" placeholder="Pick a unique username"
+                                   autocomplete="username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="reg_password" class="form-label fw-semibold">Choose a Password</label>
+                            <input type="password" id="reg_password" name="password"
+                                   class="form-control" placeholder="Create a password"
+                                   autocomplete="new-password" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="reg_confirm" class="form-label fw-semibold">Confirm Password</label>
+                            <input type="password" id="reg_confirm" name="confirm"
+                                   class="form-control" placeholder="Re-enter your password"
+                                   autocomplete="new-password" required>
+                        </div>
+                        <button type="submit" class="btn btn-dark w-100">Create Account</button>
+                    </form>
+                    <p class="text-center text-muted small mt-3 mb-0">
+                        New accounts are created as <strong>User</strong> role by default.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

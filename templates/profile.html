@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block title %}Profile | InstaCMS{% endblock %}
+
+{% block content %}
+<div class="page-wrap">
+
+    <!-- profile header -->
+    <div class="d-flex align-items-center gap-4 mb-4">
+        {% if prof and prof['profile_photo'] %}
+            <img src="{{ url_for('static', filename='uploads/' + prof['profile_photo']) }}" class="profile-photo" alt="Profile Photo">
+        {% else %}
+            <div class="profile-photo-placeholder">👤</div>
+        {% endif %}
+
+        <div>
+            <p class="fw-semibold mb-1" style="font-size:1.1rem;">{{ prof['username'] if prof else 'my_account' }}</p>
+            <p class="text-muted small mb-2">{{ prof['bio'] if prof and prof['bio'] else 'No bio yet.' }}</p>
+
+            <!-- stats -->
+            <div class="d-flex gap-3 mb-3">
+                <div><span class="fw-semibold">{{ total_posts }}</span> <span class="text-muted small">posts</span></div>
+                <div><span class="fw-semibold">{{ follower_count }}</span> <span class="text-muted small">followers</span></div>
+                <div><span class="fw-semibold">{{ following_count }}</span> <span class="text-muted small">following</span></div>
+            </div>
+
+            <!-- actions -->
+            <div class="d-flex gap-2">
+                <form method="POST" action="/profile/follow">
+                    {% if prof and prof['is_followed'] %}
+                        <button type="submit" class="follow-btn-active">Following</button>
+                    {% else %}
+                        <button type="submit" class="follow-btn">Follow</button>
+                    {% endif %}
+                </form>
+                <a href="/profile/edit" class="btn btn-outline-secondary btn-sm">Edit Profile</a>
+            </div>
+        </div>
+    </div>
+
+    <hr class="mb-4">
+
+    <!-- post grid -->
+    {% if posts %}
+        <div class="row row-cols-3 row-cols-md-4 g-2">
+            {% for post in posts %}
+            <div class="col">
+                <a href="/post/{{ post['id'] }}" class="text-decoration-none">
+                    <div class="profile-grid-item">
+                        {% if post['media_file'] %}
+                            {% if post['media_type'] == 'video' %}
+                                <video class="profile-grid-media" muted><source src="{{ url_for('static', filename='uploads/' + post['media_file']) }}"></video>
+                                <div class="video-overlay">▶</div>
+                            {% else %}
+                                <img src="{{ url_for('static', filename='uploads/' + post['media_file']) }}" class="profile-grid-media" alt="post">
+                            {% endif %}
+                        {% elif post['image_url'] %}
+                            <img src="{{ post['image_url'] }}" class="profile-grid-media" alt="post" onerror="this.src='https://placehold.co/300x300?text=—'">
+                        {% else %}
+                            <div class="profile-grid-media d-flex align-items-center justify-content-center text-muted">—</div>
+                        {% endif %}
+                        <div class="profile-grid-overlay">{{ post['likes'] }} ♥</div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-muted small">No posts yet. <a href="/add-post">Add one</a>.</p>
+    {% endif %}
+
+</div>
+{% endblock %}

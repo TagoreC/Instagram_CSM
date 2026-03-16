@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}Edit Profile | InstaCMS{% endblock %}
+
+{% block content %}
+<div class="page-wrap">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <div class="d-flex align-items-center gap-3 mb-4">
+                <a href="/profile" class="btn btn-outline-secondary btn-sm">← Back</a>
+                <p class="page-title mb-0">Edit Profile</p>
+            </div>
+
+            <!-- current photo preview -->
+            <div class="mb-3">
+                {% if prof and prof['profile_photo'] %}
+                    <img src="{{ url_for('static', filename='uploads/' + prof['profile_photo']) }}"
+                         class="profile-photo" id="photoPreview" alt="photo">
+                {% else %}
+                    <div class="profile-photo-placeholder" id="photoPlaceholder">👤</div>
+                    <img src="" class="profile-photo d-none" id="photoPreview" alt="preview">
+                {% endif %}
+            </div>
+
+            <form method="POST" action="/profile/edit" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label class="form-label small">Profile Photo</label>
+                    <input type="file" class="form-control form-control-sm" name="profile_photo"
+                           accept="image/*" onchange="previewPhoto(this)">
+                </div>
+                <div class="mb-3">
+                    <label for="username" class="form-label small">Username</label>
+                    <input type="text" class="form-control form-control-sm" id="username" name="username"
+                           value="{{ prof['username'] if prof else '' }}">
+                    <span class="error-msg"></span>
+                </div>
+                <div class="mb-3">
+                    <label for="bio" class="form-label small">Bio</label>
+                    <textarea class="form-control form-control-sm" id="bio" name="bio" rows="3">{{ prof['bio'] if prof and prof['bio'] else '' }}</textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                <a href="/profile" class="btn btn-link btn-sm text-muted">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function previewPhoto(input) {
+    var preview = document.getElementById('photoPreview');
+    var placeholder = document.getElementById('photoPlaceholder');
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+            preview.classList.remove('d-none');
+            if (placeholder) placeholder.classList.add('d-none');
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+</script>
+{% endblock %}

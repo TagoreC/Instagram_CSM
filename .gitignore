@@ -1,0 +1,14 @@
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# SQLite db
+*.db
+*.sqlite3
+instagram_cms.db
+
+# Uploads
+static/uploads/*
+!static/uploads/.gitkeep

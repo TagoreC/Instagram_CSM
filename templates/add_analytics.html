@@ -1,48 +1,41 @@
 {% extends 'base.html' %}
-
-{% block title %}Log Analytics | Instagram CMS{% endblock %}
+{% block title %}Log Snapshot | InstaCMS{% endblock %}
 
 {% block content %}
-<div class="container my-5">
+<div class="page-wrap">
     <div class="row justify-content-center">
-        <div class="col-md-6">
-            <h2 class="mb-4">📈 Log Analytics Snapshot</h2>
+        <div class="col-md-5">
+            <div class="d-flex align-items-center gap-3 mb-4">
+                <a href="/analytics" class="btn btn-outline-secondary btn-sm">← Back</a>
+                <p class="page-title mb-0">Log Snapshot</p>
+            </div>
 
             <form id="addForm" method="POST" action="/add-analytics">
-
                 <div class="mb-3">
-                    <label for="followers" class="form-label">Followers</label>
-                    <input type="number" class="form-control" id="followers" name="followers" min="0" placeholder="e.g. 1500">
+                    <label for="followers" class="form-label small">Followers *</label>
+                    <input type="number" class="form-control form-control-sm" id="followers" name="followers" min="0">
                     <span class="error-msg"></span>
                 </div>
-
                 <div class="mb-3">
-                    <label for="following" class="form-label">Following</label>
-                    <input type="number" class="form-control" id="following" name="following" min="0" placeholder="e.g. 400">
+                    <label for="following" class="form-label small">Following *</label>
+                    <input type="number" class="form-control form-control-sm" id="following" name="following" min="0">
                     <span class="error-msg"></span>
                 </div>
-
                 <div class="mb-3">
-                    <label for="total_posts" class="form-label">Total Posts</label>
-                    <input type="number" class="form-control" id="total_posts" name="total_posts" min="0" placeholder="e.g. 87">
+                    <label for="total_posts" class="form-label small">Total Posts *</label>
+                    <input type="number" class="form-control form-control-sm" id="total_posts" name="total_posts" min="0">
                     <span class="error-msg"></span>
                 </div>
-
                 <div class="mb-3">
-                    <label for="avg_likes" class="form-label">Average Likes</label>
-                    <input type="number" class="form-control" id="avg_likes" name="avg_likes" step="0.01" min="0" placeholder="e.g. 240.5">
-                    <span class="error-msg"></span>
+                    <label for="avg_likes" class="form-label small">Avg Likes</label>
+                    <input type="number" class="form-control form-control-sm" id="avg_likes" name="avg_likes" step="0.01" min="0">
                 </div>
-
-                <div class="mb-3">
-                    <label for="avg_reach" class="form-label">Average Reach</label>
-                    <input type="number" class="form-control" id="avg_reach" name="avg_reach" step="0.01" min="0" placeholder="e.g. 1200.0">
-                    <span class="error-msg"></span>
+                <div class="mb-4">
+                    <label for="avg_reach" class="form-label small">Avg Reach</label>
+                    <input type="number" class="form-control form-control-sm" id="avg_reach" name="avg_reach" step="0.01" min="0">
                 </div>
-
-                <button type="submit" class="btn btn-primary px-4">📊 Log Snapshot</button>
-                <a href="/analytics" class="btn btn-outline-secondary ms-2">Cancel</a>
-
+                <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                <a href="/analytics" class="btn btn-link btn-sm text-muted">Cancel</a>
             </form>
         </div>
     </div>
