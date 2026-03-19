@@ -7,7 +7,7 @@ A minimalist, functional content management system for Instagram posts, built wi
 - **Backend**: Flask (Python)
 - **Database**: SQLite
 - **Frontend**: HTML/CSS (Minimalist Design), JavaScript
-- **Deployment Ready**: Includes `Procfile` and `runtime.txt` for Heroku/Gunicorn deployment.
+- **Deployment Ready**: Includes `Procfile` and `runtime.txt` 
 
 ## Key Features
 
