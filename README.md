@@ -67,7 +67,7 @@ instagram-cms/
 
 - **Database**: The SQLite database (`instagram_cms.db`) is auto-created and seeded on the first run.
 - **Admin Account**: If no users exist in the database upon startup, a default admin account is automatically created:
-  - **Username**: `vensunreddy`
-  - **Password**: `admin123`
+  - **Username**: 
+  - **Password**: 
   - **Role**: `admin`
 - **Uploads**: Media uploads are saved locally in the `static/uploads/` directory, supporting a maximum size limit of 64MB.
