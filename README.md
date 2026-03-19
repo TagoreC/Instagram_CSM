@@ -71,3 +71,5 @@ instagram-cms/
   - **Password**: 
   - **Role**: `admin`
 - **Uploads**: Media uploads are saved locally in the `static/uploads/` directory, supporting a maximum size limit of 64MB.
+##Deployment Link
+https://instagram-csm.onrender.com
